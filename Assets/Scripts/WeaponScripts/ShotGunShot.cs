@@ -1,0 +1,58 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ShotGunShot : MonoBehaviour
+{
+    Camera _fpsCam;
+    [SerializeField] int _damage;
+    [SerializeField] float _range;
+    [SerializeField] float _fireRate;
+    [SerializeField] float _scatter;
+    [SerializeField] int _bulletCount;
+    float _nextTimeToFire = 0f;
+    [SerializeField] FlashScript _flashScript;
+    [SerializeField] ShotImpactScript _shotImpactScript;
+    void Start()
+    {
+        _fpsCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        _flashScript = gameObject.GetComponent<FlashScript>();
+        _shotImpactScript = gameObject.GetComponent<ShotImpactScript>();
+    }
+
+    private void OnEnable()
+    {
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInput>().Fired += OnFired;
+    }
+
+    private void OnDisable()
+    {
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInput>().Fired -= OnFired;
+    }
+
+    private void OnFired()
+    {
+        if (Time.time >= _nextTimeToFire)
+        {
+            _nextTimeToFire = Time.time + 1f / _fireRate;
+            RaycastHit hit;
+            _flashScript.PlayFlash();
+            for (int _bCount = _bulletCount; _bCount > 0; _bCount--)
+            {
+                Vector3 _direction = _fpsCam.transform.forward;
+                Vector3 _spread = new Vector3();
+                _spread += _fpsCam.transform.up * Random.Range(-_scatter, _scatter);
+                _spread += _fpsCam.transform.right * Random.Range(-_scatter, _scatter);
+                _direction += _spread.normalized * Random.Range(0f, 0.2f);
+                if (Physics.Raycast(_fpsCam.transform.position, _direction, out hit, _range))
+                {
+                    Debug.Log(hit.transform.name);
+                    _shotImpactScript.SpawnImpact(hit.point, Quaternion.LookRotation(hit.normal));
+                }
+            }
+
+        }
+
+
+    }
+}
