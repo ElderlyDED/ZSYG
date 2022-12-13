@@ -7,7 +7,6 @@ public class ChargaredGunShot : MonoBehaviour
     Camera _fpsCam;
     [SerializeField] float _chargaredTime;
     [SerializeField] float _maxCharge;
-    [SerializeField] bool _chargared;
     [SerializeField] int _damage;
     [SerializeField] float _range;
     [SerializeField] FlashScript _flashScript;
@@ -15,11 +14,13 @@ public class ChargaredGunShot : MonoBehaviour
     [SerializeField] float _delayShot;
     [SerializeField] bool _readyShot;
     PlayerInput _playerInputScript;
+    [SerializeField] WeaponAnimator _weaponAnimatorScript;
     void Start()
     {
         _fpsCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         _flashScript = gameObject.GetComponent<FlashScript>();
         _shotImpactScript = gameObject.GetComponent<ShotImpactScript>();
+        _weaponAnimatorScript = gameObject.GetComponent<WeaponAnimator>();
     }
 
     private void OnEnable()
@@ -58,13 +59,14 @@ public class ChargaredGunShot : MonoBehaviour
             _chargaredTime = 0f;
             RaycastHit hit;
             _flashScript.PlayFlash();
+            _weaponAnimatorScript.GunShotAnimation();
             if (Physics.Raycast(_fpsCam.transform.position, _fpsCam.transform.forward, out hit, _range))
             {
                 Debug.Log(hit.transform.name);
-                EnemyHealt eh = hit.transform.GetComponent<EnemyHealt>();
-                if (eh != null)
+                EnemyHealt _eh = hit.transform.GetComponent<EnemyHealt>();
+                if (_eh != null)
                 {
-                    eh.TakeDamage(_chargaredDamage);
+                    gameObject.GetComponent<DamageEnemy>().GetDamage(_eh, _chargaredDamage);
                 }
                 _shotImpactScript.SpawnImpact(hit.point, Quaternion.LookRotation(hit.normal));
             }

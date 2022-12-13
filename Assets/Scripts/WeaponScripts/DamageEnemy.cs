@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class DamageEnemy : MonoBehaviour
 {
-    [SerializeField] int _damage;
-    public void GetDamage(EnemyHealt eh)
+    public void GetDamage(EnemyHealt eh, int _damage)
     {
         if (eh != null)
         {

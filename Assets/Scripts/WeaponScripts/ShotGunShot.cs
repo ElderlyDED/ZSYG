@@ -5,7 +5,7 @@ using UnityEngine;
 public class ShotGunShot : MonoBehaviour
 {
     Camera _fpsCam;
-    [SerializeField] int _damage;
+    [SerializeField] int _bulletDamage;
     [SerializeField] float _range;
     [SerializeField] float _fireRate;
     [SerializeField] float _scatter;
@@ -13,11 +13,13 @@ public class ShotGunShot : MonoBehaviour
     float _nextTimeToFire = 0f;
     [SerializeField] FlashScript _flashScript;
     [SerializeField] ShotImpactScript _shotImpactScript;
+    [SerializeField] WeaponAnimator _weaponAnimatorScript;
     void Start()
     {
         _fpsCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         _flashScript = gameObject.GetComponent<FlashScript>();
         _shotImpactScript = gameObject.GetComponent<ShotImpactScript>();
+        _weaponAnimatorScript = gameObject.GetComponent<WeaponAnimator>();
     }
 
     private void OnEnable()
@@ -37,6 +39,7 @@ public class ShotGunShot : MonoBehaviour
             _nextTimeToFire = Time.time + 1f / _fireRate;
             RaycastHit hit;
             _flashScript.PlayFlash();
+            _weaponAnimatorScript.GunShotAnimation();
             for (int _bCount = _bulletCount; _bCount > 0; _bCount--)
             {
                 Vector3 _direction = _fpsCam.transform.forward;
@@ -47,6 +50,11 @@ public class ShotGunShot : MonoBehaviour
                 if (Physics.Raycast(_fpsCam.transform.position, _direction, out hit, _range))
                 {
                     Debug.Log(hit.transform.name);
+                    EnemyHealt _eh = hit.transform.GetComponent<EnemyHealt>();
+                    if (_eh != null)
+                    {
+                        gameObject.GetComponent<DamageEnemy>().GetDamage(_eh, _bulletDamage);
+                    }
                     _shotImpactScript.SpawnImpact(hit.point, Quaternion.LookRotation(hit.normal));
                 }
             }

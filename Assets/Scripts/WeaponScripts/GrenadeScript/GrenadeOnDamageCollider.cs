@@ -5,6 +5,8 @@ using UnityEngine;
 public class GrenadeOnDamageCollider : MonoBehaviour
 {
     [SerializeField] SphereCollider _damageCollider;
+    [SerializeField] int _grenadeDamage;
+
 
     public void OnDamageCollider()
     {
@@ -22,8 +24,8 @@ public class GrenadeOnDamageCollider : MonoBehaviour
     {
         if(other.GetComponent<EnemyHealt>() != null)
         {
-            EnemyHealt enemyHealt = other.GetComponent<EnemyHealt>();
-            gameObject.GetComponent<DamageEnemy>().GetDamage(enemyHealt);
+            EnemyHealt _enemyHealt = other.GetComponent<EnemyHealt>();
+            gameObject.GetComponent<DamageEnemy>().GetDamage(_enemyHealt, _grenadeDamage);
         }
     }
 }

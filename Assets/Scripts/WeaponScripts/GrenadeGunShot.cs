@@ -5,6 +5,7 @@ using UnityEngine;
 public class GrenadeGunShot : MonoBehaviour
 {
     Camera _fpsCam;
+    public int grenadeDamage;
     [SerializeField] GameObject _grenade;
     [SerializeField] Transform _grenadeSpawnPoint;
     [SerializeField] float _shotForce;
@@ -12,12 +13,12 @@ public class GrenadeGunShot : MonoBehaviour
     [SerializeField] float _fireRate;
     float _nextTimeToFire = 0f;
     [SerializeField] FlashScript _flashScript;
-    [SerializeField] ShotImpactScript _shotImpactScript;
+    [SerializeField] WeaponAnimator _weaponAnimatorScript;
     void Start()
     {
         _fpsCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         _flashScript = gameObject.GetComponent<FlashScript>();
-        _shotImpactScript = gameObject.GetComponent<ShotImpactScript>();
+        _weaponAnimatorScript = gameObject.GetComponent<WeaponAnimator>();
     }
 
     private void OnEnable()
@@ -35,9 +36,11 @@ public class GrenadeGunShot : MonoBehaviour
         if (Time.time >= _nextTimeToFire)
         {
             _nextTimeToFire = Time.time + 1f / _fireRate;
+            _flashScript.PlayFlash();
             GameObject _grenadeObj = Instantiate(_grenade, _grenadeSpawnPoint.position, _fpsCam.transform.rotation);
             Vector3 _force = _fpsCam.transform.forward * _shotForce + transform.up * _shotUpForce;
             _grenadeObj.GetComponent<Rigidbody>().AddForce(_force, ForceMode.Impulse);
+            _weaponAnimatorScript.GunShotAnimation();
         }
 
     }
