@@ -5,8 +5,8 @@ using UnityEngine;
 public class ChargaredGunShot : MonoBehaviour
 {
     Camera _fpsCam;
-    [SerializeField] float _chargaredTime;
-    [SerializeField] float _maxCharge;
+    [SerializeField] public float chargaredTime;
+    [SerializeField] public float maxCharge;
     [SerializeField] int _damage;
     [SerializeField] float _range;
     [SerializeField] FlashScript _flashScript;
@@ -15,12 +15,14 @@ public class ChargaredGunShot : MonoBehaviour
     [SerializeField] bool _readyShot;
     PlayerInput _playerInputScript;
     [SerializeField] WeaponAnimator _weaponAnimatorScript;
+    [SerializeField] WeaponAmmo _weaponAmmo;
     void Start()
     {
         _fpsCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         _flashScript = gameObject.GetComponent<FlashScript>();
         _shotImpactScript = gameObject.GetComponent<ShotImpactScript>();
         _weaponAnimatorScript = gameObject.GetComponent<WeaponAnimator>();
+        _weaponAmmo = gameObject.GetComponent<WeaponAmmo>();
     }
 
     private void OnEnable()
@@ -40,11 +42,11 @@ public class ChargaredGunShot : MonoBehaviour
     {
         if (_readyShot == true)
         {
-            _chargaredTime += 2 * Time.deltaTime;
-            if (_chargaredTime > _maxCharge)
+            chargaredTime += 2 * Time.deltaTime;
+            if (chargaredTime > maxCharge)
             {
                 NotPressedFired();
-                _chargaredTime = 0f;
+                chargaredTime = 0f;
                 _readyShot = false;
                 StartCoroutine(SwitcherReadyShot());
             }
@@ -55,8 +57,9 @@ public class ChargaredGunShot : MonoBehaviour
     {
         if (_readyShot == true)
         {
-            int _chargaredDamage = _damage + (_damage * (int)_chargaredTime);
-            _chargaredTime = 0f;
+            int _chargaredDamage = _damage + (_damage * (int)chargaredTime);
+            chargaredTime = 0f;
+            _weaponAmmo.ShotMinusAmmo();
             RaycastHit hit;
             _flashScript.PlayFlash();
             _weaponAnimatorScript.GunShotAnimation();

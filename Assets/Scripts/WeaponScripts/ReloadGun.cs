@@ -7,7 +7,7 @@ public class ReloadGun : MonoBehaviour
     [SerializeField] float _reloadTime;
     [SerializeField] WeaponAnimator _weaponAnimatorScript;
     [SerializeField] WeaponAmmo _weaponAmmo;
-    public bool reloading { get; private set; }
+    [field: SerializeField] public bool reloading { get; private set; }
 
     private void Start()
     {
@@ -23,6 +23,7 @@ public class ReloadGun : MonoBehaviour
     void OnEnable()
     {
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInput>().ReloadingGun += OnReloadingGun;
+        reloading = false;
     }
 
     void OnDisable()
@@ -32,11 +33,10 @@ public class ReloadGun : MonoBehaviour
 
     void OnReloadingGun()
     {
-        if (_weaponAmmo.emptyAmmo == false)
+        if (_weaponAmmo.EmptyAmmo == false)
         {
             if (reloading == false)
             {
-                _weaponAmmo.ReloadWeapon();
                 StartCoroutine(AnimationReloading());
             }
             else
@@ -48,15 +48,13 @@ public class ReloadGun : MonoBehaviour
         {
             return;
         }
-        
-        
     }
 
     void AutoReloadingGun()
     {
-        if (_weaponAmmo.emptyAmmo == false)
+        if (_weaponAmmo.EmptyAmmo == false)
         {
-            if (_weaponAmmo.magazineAmmo <= 0)
+            if (_weaponAmmo.MagazineAmmo <= 0)
             {
                 OnReloadingGun();
             }
@@ -74,6 +72,8 @@ public class ReloadGun : MonoBehaviour
         _weaponAnimatorScript.GunDownAnimation();
         yield return new WaitForSeconds(_reloadTime);
         _weaponAnimatorScript.GunUpAnimation();
+        yield return new WaitForSeconds(0.2f);
+        _weaponAmmo.ReloadWeapon();
         reloading = false;
     }  
 }

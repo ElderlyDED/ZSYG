@@ -36,7 +36,7 @@ public class ARWeaponShot : MonoBehaviour
 
     private void OnFired()
     {
-        if (_weaponAmmo.emptyAmmo == false)
+        if (_weaponAmmo.EmptyAmmo == false)
         {
             if (_reloadGun.reloading == false)
             {

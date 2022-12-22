@@ -5,11 +5,11 @@ using UnityEngine;
 public class WeaponAmmo : MonoBehaviour
 {
     [SerializeField] int _magazineSize;
-    public int magazineAmmo;
-    public bool emptyAmmo { get; private set; }
-    [SerializeField] int _allAmmo;
-    [SerializeField] bool _notMagazine;
-    [SerializeField] bool _infAllAmmo;
+    [field: SerializeField] public int MagazineAmmo { get; private set; }
+    [field: SerializeField] public bool EmptyAmmo { get; private set; }
+    [field: SerializeField] public int AllAmmo { get; private set; }
+    [field: SerializeField] public bool NotMagazine { get; private set; }
+    [field: SerializeField] public bool InfAllAmmo { get; private set; }
 
     void Update()
     {
@@ -18,42 +18,42 @@ public class WeaponAmmo : MonoBehaviour
 
     public void ShotMinusAmmo()
     {
-        if (_notMagazine == true)
+        if (NotMagazine == true)
         {
-            _allAmmo--;
+            AllAmmo--;
         }
         else
         {
-            magazineAmmo--;
+            MagazineAmmo--;
         } 
    
     }
 
     public void ReloadWeapon()
     {
-        if (_infAllAmmo)
+        if (InfAllAmmo)
         {
-            int _amountAmmoLoad = _magazineSize - magazineAmmo;
-            magazineAmmo += _amountAmmoLoad;
+            int _amountAmmoLoad = _magazineSize - MagazineAmmo;
+            MagazineAmmo += _amountAmmoLoad;
         }
         else
         {
-            if (_allAmmo <= 0)
+            if (AllAmmo <= 0)
             {
                 return;
             }
             else
             {
-                int _amountAmmoLoad = _magazineSize - magazineAmmo;
-                if (_allAmmo >= _amountAmmoLoad)
+                int _amountAmmoLoad = _magazineSize - MagazineAmmo;
+                if (AllAmmo >= _amountAmmoLoad)
                 {
-                    magazineAmmo += _amountAmmoLoad;
-                    _allAmmo -= _amountAmmoLoad;
+                    MagazineAmmo += _amountAmmoLoad;
+                    AllAmmo -= _amountAmmoLoad;
                 }
                 else
                 {
-                    magazineAmmo += _allAmmo;
-                    _allAmmo = 0;
+                    MagazineAmmo += AllAmmo;
+                    AllAmmo = 0;
                 }
                 
             }
@@ -63,9 +63,14 @@ public class WeaponAmmo : MonoBehaviour
 
     void CheckMagazinAmmo()
     {
-        if (magazineAmmo <= 0)
+        if (NotMagazine == false && AllAmmo <= 0 && MagazineAmmo <= 0)
         {
-            emptyAmmo = true;
+            EmptyAmmo = true;
+        }
+
+        if (NotMagazine == true && AllAmmo <= 0)
+        {
+            EmptyAmmo = true;
         }
     }
 }

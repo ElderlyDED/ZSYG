@@ -9,6 +9,8 @@ public class WeaponSwitcher : MonoBehaviour
     [SerializeField] PlayerInput _playerInputScript;
     [SerializeField] Transform _lastWeapon;
     [SerializeField] int _selectSlot = 0;
+    [SerializeField] List<Transform> _equipmentWeapons = new();
+    [SerializeField] WeaponGUI _weaponGUI;
 
     void OnEnable()
     {
@@ -32,12 +34,13 @@ public class WeaponSwitcher : MonoBehaviour
 
     private void Start()
     {
+        _weaponGUI = GameObject.FindGameObjectWithTag("GameUI").GetComponent<WeaponGUI>();
         UpStartGun();
     }
 
     void OnSelectSlot()
     {
-
+        CheckAcvtivWeapon();
         bool _slot0 = _playerInputScript.SelectSlot0;
         if (_slot0 == true)
         {
@@ -69,35 +72,61 @@ public class WeaponSwitcher : MonoBehaviour
             _selectSlot = 5;
         }
         int i = 0;
-        foreach (Transform _weapon in _weaponHolder)
+        foreach (Transform _weapon in _equipmentWeapons)
         {
-            if (i == _selectSlot && _weapon.GetComponent<WeaponEquip>().weaponEquip == true)
+            if (i == _selectSlot)
             {
+                
                 if (_weapon != _lastWeapon)
                 {
                     _weapon.GetComponent<WeaponAnimator>().GunUpAnimation();
                     _lastWeapon.gameObject.SetActive(false);
                     _weapon.gameObject.SetActive(true);
                     _lastWeapon = _weapon;
+                    _weaponGUI.WeaponSlotsSwitch(_weapon.GetComponent<GetGUIWeaponSlotInf>().WeaponSlotId);
+                    _weaponGUI.WeaponAmmoGuiSwitch(_weapon.GetComponent<WeaponAmmo>(), _weapon.GetComponent<GetGUIWeaponSlotInf>());
+                    if (_weapon.GetComponent<GetGUIWeaponSlotInf>().ChargerGunBar == true)
+                    {
+                        _weaponGUI.WeaponEnableChargerBar(_weapon.GetComponent<GetGUIWeaponSlotInf>().ChargerGunBar, _weapon.GetComponent<ChargaredGunShot>());
+                    }
+                    else
+                    {
+                        _weaponGUI.WeaponEnableChargerBar(_weapon.GetComponent<GetGUIWeaponSlotInf>().ChargerGunBar, null);
+                    }
+
                 }
                 else if (_weapon == _lastWeapon)
                 {
                     _weapon.gameObject.SetActive(false);
                     _lastWeapon.gameObject.SetActive(true);
+                    _weaponGUI.WeaponSlotsSwitch(_weapon.GetComponent<GetGUIWeaponSlotInf>().WeaponSlotId);
+                    _weaponGUI.WeaponAmmoGuiSwitch(_weapon.GetComponent<WeaponAmmo>(), _weapon.GetComponent<GetGUIWeaponSlotInf>());
+                    if (_weapon.GetComponent<GetGUIWeaponSlotInf>().ChargerGunBar == true)
+                    {
+                        _weaponGUI.WeaponEnableChargerBar(_weapon.GetComponent<GetGUIWeaponSlotInf>().ChargerGunBar, _weapon.GetComponent<ChargaredGunShot>());
+                    }
+                    else
+                    {
+                        _weaponGUI.WeaponEnableChargerBar(_weapon.GetComponent<GetGUIWeaponSlotInf>().ChargerGunBar, null);
+                    }
+
                 }
+                
             }
             else
             {
-                if (_weapon != _lastWeapon)
+                if (_weapon != _lastWeapon && _selectSlot - 1 <= _equipmentWeapons.Count)
                 {
                     _lastWeapon.gameObject.SetActive(true);
+
                 }
-                else
+                else if(_weapon != _lastWeapon && _selectSlot - 1 > _equipmentWeapons.Count)
                 {
                     _weapon.gameObject.SetActive(false);
                 }
             }
             i++;
+            
         }
     }
 
@@ -108,4 +137,16 @@ public class WeaponSwitcher : MonoBehaviour
         _lastWeapon = _firstGunUp;
         _firstGunUp.GetComponent<WeaponAnimator>().GunUpAnimation();
     }
+    [ContextMenu("UpdateList")]
+    void CheckAcvtivWeapon()
+    {
+        _equipmentWeapons.Clear();
+        foreach (Transform _weaponObj in _weaponHolder.transform)
+        {
+            if (_weaponObj.GetComponent<WeaponEquip>().weaponEquip == true)
+            {
+                _equipmentWeapons.Add(_weaponObj);
+            }
+        }
+    } 
 }
