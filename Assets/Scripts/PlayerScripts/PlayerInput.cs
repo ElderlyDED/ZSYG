@@ -15,6 +15,7 @@ public class PlayerInput : MonoBehaviour
     public bool SelectSlot3 { get; private set; }
     public bool SelectSlot4 { get; private set; }
     public bool SelectSlot5 { get; private set; }
+    public bool IsInteract { get; private set; }
 
     public event Action Fired = default;
     public event Action PressedFire = default;
@@ -26,6 +27,7 @@ public class PlayerInput : MonoBehaviour
     public event Action SelectedSlot3 = default;
     public event Action SelectedSlot4 = default;
     public event Action SelectedSlot5 = default;
+    public event Action Interact = default;
 
     void Update()
     {
@@ -87,6 +89,12 @@ public class PlayerInput : MonoBehaviour
         if (SelectSlot5 && SelectedSlot5 != null)
         {
             SelectedSlot5();
+        }
+
+        IsInteract = Input.GetKeyDown(KeyCode.E);
+        if (IsInteract && Interact != null)
+        {
+            Interact();
         }
     }
 }

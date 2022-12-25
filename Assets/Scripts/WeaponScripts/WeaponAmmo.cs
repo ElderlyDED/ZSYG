@@ -8,6 +8,7 @@ public class WeaponAmmo : MonoBehaviour
     [field: SerializeField] public int MagazineAmmo { get; private set; }
     [field: SerializeField] public bool EmptyAmmo { get; private set; }
     [field: SerializeField] public int AllAmmo { get; private set; }
+    [SerializeField] int _maxAllAmmo;
     [field: SerializeField] public bool NotMagazine { get; private set; }
     [field: SerializeField] public bool InfAllAmmo { get; private set; }
 
@@ -72,5 +73,11 @@ public class WeaponAmmo : MonoBehaviour
         {
             EmptyAmmo = true;
         }
+    }
+
+    public void FillAmmo()
+    {
+        MagazineAmmo = _magazineSize;
+        AllAmmo = _maxAllAmmo;
     }
 }

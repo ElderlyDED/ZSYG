@@ -8,6 +8,8 @@ TagManager:
   - FX
   - WeaponHolder
   - GameUI
+  - AmmoCrate
+  - InteractText
   layers:
   - Default
   - TransparentFX
