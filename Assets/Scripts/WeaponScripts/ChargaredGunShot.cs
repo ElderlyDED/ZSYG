@@ -66,7 +66,7 @@ public class ChargaredGunShot : MonoBehaviour
             if (Physics.Raycast(_fpsCam.transform.position, _fpsCam.transform.forward, out hit, _range))
             {
                 Debug.Log(hit.transform.name);
-                EnemyHealt _eh = hit.transform.GetComponent<EnemyHealt>();
+                EnemyHealth _eh = hit.transform.GetComponent<EnemyHealth>();
                 if (_eh != null)
                 {
                     gameObject.GetComponent<DamageEnemy>().GetDamage(_eh, _chargaredDamage);

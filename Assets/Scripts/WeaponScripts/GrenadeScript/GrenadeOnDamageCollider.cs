@@ -22,9 +22,9 @@ public class GrenadeOnDamageCollider : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.GetComponent<EnemyHealt>() != null)
+        if(other.GetComponent<EnemyHealth>() != null)
         {
-            EnemyHealt _enemyHealt = other.GetComponent<EnemyHealt>();
+            EnemyHealth _enemyHealt = other.GetComponent<EnemyHealth>();
             gameObject.GetComponent<DamageEnemy>().GetDamage(_enemyHealt, _grenadeDamage);
         }
     }
