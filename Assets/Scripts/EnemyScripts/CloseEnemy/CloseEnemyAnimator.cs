@@ -21,7 +21,7 @@ public class CloseEnemyAnimator : MonoBehaviour
         _animator.SetBool("Punch Attack", true);
         _animator.SetBool("Run Forward", false);
     }
-
+    
     public void DieAnimation()
     {
         _animator.SetTrigger("Die");

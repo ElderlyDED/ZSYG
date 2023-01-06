@@ -10,8 +10,10 @@ public class DieEnemy : MonoBehaviour
     [SerializeField] float _dissolveRateDis;
     [SerializeField] float _refreshRateDis;
     [SerializeField] SkinnedMeshRenderer _skinRenderer;
+    [SerializeField] BoxCollider _enemyCollider;
     public void OnDieEnemy()
     {
+        _enemyCollider.enabled = false;
         _enemyScript.StopMove();
         StartCoroutine(DieDelay());
         _animator.DieAnimation();
